@@ -59,6 +59,8 @@ public class Main {
 	protected static Logger mLog = Logger.getLogger(Main.class);
 	private static Options options;
 	private static ThumbnailerManager thumbnailer;
+	private static int width = 160;
+	private static int height = 120;
 	private static File outFile;
 	private static File inFile;
 	private static final String LOG4J_CONFIG_FILE = "conf/javathumbnailer.log4j.properties";
@@ -70,21 +72,20 @@ public class Main {
 			explainUsage();
 			System.exit(-1);
 		}
-		initLogging();
-		
-		thumbnailer = new ThumbnailerManager();
-	
-		loadExistingThumbnailers();
-		
-		// Set Default Values
-		thumbnailer.setImageSize(160, 120, 0);
-		thumbnailer.setThumbnailFolder("thumbs/");
 		
 		initParams();
 		parseParams(params);
+
+		thumbnailer = new ThumbnailerManager();	
+		thumbnailer.setImageSize(width, height, 0);
+		
+		loadExistingThumbnailers();
 		
 		if (outFile == null)
+		{
+			thumbnailer.setThumbnailFolder("thumbs/");
 			outFile = thumbnailer.createThumbnail(inFile);
+		}
 		else
 			thumbnailer.generateThumbnail(inFile, outFile);
 		
@@ -93,10 +94,13 @@ public class Main {
 
 	private static void initParams() {
 		options = new Options();
+
 		OptionBuilder.withArgName("WIDTHxHEIGHT");
 		OptionBuilder.hasArg();
 		OptionBuilder.withDescription("Size of the new thumbnail (default: 160x120)");
 		options.addOption(OptionBuilder.create("size"));
+
+		options.addOption("nolog", false, "Whether to supress logging to file");
 	}
 
 	private static void parseParams(String[] params) {
@@ -109,10 +113,24 @@ public class Main {
 			explainUsage();
 			System.exit(1);			
 		}
+
+		if(!line.hasOption("nolog"))
+		{
+			try {
+				initLogging();
+			} catch ( IOException e ) {
+				System.err.println("An error occured while setting up logging: " + e.getMessage());
+			}
+		}
 		
 		if (line.hasOption("size"))
 		{
-			// TODO Set
+			String[] parts = line.getOptionValue("size").split("x");
+			if(parts.length == 2)
+			{
+				width = Integer.parseInt(parts[0]);
+				height = Integer.parseInt(parts[1]);
+			}
 		}
 		
 		String[] files = line.getArgs();
@@ -130,7 +148,7 @@ public class Main {
 		System.out.println("JavaThumbnailer");
 		System.out.println("===============");
 		System.out.println("");
-		System.out.println("Usage: java -jar javathumbnailer-standalone.jar [-size 160x120] inputfile [outputfile]");
+		System.out.println("Usage: java -jar javathumbnailer-standalone.jar [-size 160x120] [-nolog] inputfile [outputfile]");
 		
 		HelpFormatter formatter = new HelpFormatter();
 		formatter.printHelp( "java -jar javathumbnailer-standalone.jar", options );		
