@@ -46,7 +46,7 @@ import de.uni_siegen.wineme.come_in.thumbnailer.util.TemporaryFilesManager;
  * <li>OpenOffice 3 / LibreOffice
  * <li>JODConverter 3 beta5 or higher
  * <li>Aperture Core (MIME Type detection)
- * <li>OpenOfficeThumbnailer
+ * <li>PDFBoxThumbnailer
  * 
  * 
  * @TODO Be stricter about which kind of files to process. Currently it converts just like everything. (See tests/ThumbnailersFailingTest)
@@ -70,9 +70,9 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 	protected static OfficeDocumentConverter officeConverter = null;
 
 	/**
-	 * Thumbnail Extractor for OpenOffice Files
+	 * Thumbnail Extractor for PDF Files
 	 */
-	protected OpenOfficeThumbnailer ooo_thumbnailer = null;
+	protected PDFBoxThumbnailer pdf_thumbnailer = null;
 	
 	/**
 	 * MimeIdentification
@@ -119,7 +119,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 	
 	public JODConverterThumbnailer()
 	{
-		ooo_thumbnailer = new OpenOfficeThumbnailer();
+		pdf_thumbnailer = new PDFBoxThumbnailer();
 		mimeTypeDetector = new MimeTypeDetector();
 		temporaryFilesManager = new TemporaryFilesManager();
 	}
@@ -190,7 +190,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 		try {
 			try {
 				temporaryFilesManager.deleteAllTempfiles();
-				ooo_thumbnailer.close();
+				pdf_thumbnailer.close();
 			} finally {
 				disconnect();
 			}
@@ -217,7 +217,7 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
 		File outputTmp = null;
 		try {
-			outputTmp = File.createTempFile("jodtemp", "." + getStandardOpenOfficeExtension());
+			outputTmp = File.createTempFile("jodtemp", ".pdf");
 
 			// Naughty hack to circumvent invalid URLs under windows (C:\\ ...)
 			if (Platform.isWindows())
@@ -226,14 +226,14 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 			try {
 				officeConverter.convert(input, outputTmp);
 			} catch (OfficeException e) {
-				throw new ThumbnailerException("Could not convert into OpenOffice-File", e);
+				throw new ThumbnailerException("Could not convert into PDF", e);
 			}
 			if (outputTmp.length() == 0)
 			{
-				throw new ThumbnailerException("Could not convert into OpenOffice-File (file was empty)...");
+				throw new ThumbnailerException("Could not convert into PDF (file was empty)...");
 			}
 
-			ooo_thumbnailer.generateThumbnail(outputTmp, output);
+			pdf_thumbnailer.generateThumbnail(outputTmp, output);
 		} finally {
 			IOUtil.deleteQuietlyForce(outputTmp);
 		}
@@ -273,6 +273,6 @@ public abstract class JODConverterThumbnailer extends AbstractThumbnailer {
 
 	public void setImageSize(int thumbWidth, int thumbHeight, int imageResizeOptions) {
 		super.setImageSize(thumbWidth, thumbHeight, imageResizeOptions);
-		ooo_thumbnailer.setImageSize(thumbWidth, thumbHeight, imageResizeOptions);
+		pdf_thumbnailer.setImageSize(thumbWidth, thumbHeight, imageResizeOptions);
 	}
 }
