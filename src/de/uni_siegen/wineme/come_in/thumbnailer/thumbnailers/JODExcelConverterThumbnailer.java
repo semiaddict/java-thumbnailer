@@ -55,6 +55,11 @@ public class JODExcelConverterThumbnailer extends JODConverterThumbnailer {
 				"application/vnd.ms-excel",
 				"application/vnd.openxmlformats-officedocument.spreadsheetml",
 				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				"application/vnd.sun.xml.calc",
+				"application/vnd.sun.xml.calc.template",
+				"application/vnd.stardivision.calc",
+				"application/vnd.oasis.opendocument.spreadsheet",
+				"application/vnd.oasis.opendocument.spreadsheet-template",
 		/*		"application/vnd.ms-office", // xls?
 				"application/zip" // xlsx? */
 		};

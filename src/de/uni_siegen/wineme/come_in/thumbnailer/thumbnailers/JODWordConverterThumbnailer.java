@@ -62,6 +62,13 @@ public class JODWordConverterThumbnailer extends JODConverterThumbnailer {
 				"application/vnd.openxmlformats-officedocument.wordprocessingml",
 				"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 				"application/wordperfect",
+				"application/vnd.sun.xml.writer",
+				"application/vnd.sun.xml.writer.template",
+				"application/vnd.sun.xml.writer.global",
+				"application/vnd.oasis.opendocument.text",
+				"application/vnd.oasis.opendocument.text-template",
+				"application/vnd.oasis.opendocument.text-web",
+				"application/vnd.oasis.opendocument.text-master",
 		/*		"application/vnd.ms-office", // doc?
 				"application/zip" // docx? */
 		};

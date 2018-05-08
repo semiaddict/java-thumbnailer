@@ -57,6 +57,11 @@ public class JODPowerpointConverterThumbnailer extends JODConverterThumbnailer {
 				"application/vnd.ms-powerpoint",
 				"application/vnd.openxmlformats-officedocument.presentationml",
 				"application/vnd.openxmlformats-officedocument.presentationml.presentation",
+				"application/vnd.sun.xml.impress",
+				"application/vnd.sun.xml.impress.template ",
+				"application/vnd.stardivision.impress sdd",
+				"application/vnd.oasis.opendocument.presentation",
+				"application/vnd.oasis.opendocument.presentation-template",
 		/*		"application/vnd.ms-office", // ppt?
 				"application/zip" // pptx? */
 
